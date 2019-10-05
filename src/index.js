@@ -3,16 +3,31 @@ const exporter = require('highcharts-export-server');
 
 exports.handler = async (event) => {
 
-    // Load the fonts
-    process.env.FONTCONFIG_PATH='/var/task/fonts'
-    
-    // Just for logging
     console.log(event);
 
-    // The async request MUST be placed in a promise otherwise highcharts returns an undefined res
     const promise = new Promise(function(resolve, reject) {
 
-        // Export settings passed in dynamically from the event
+        // Build the chart options
+        var chartOptions = {
+        title: {
+            text: 'My Chart'
+        },
+        xAxis: {
+            categories: ["Jan", "Feb", "Mar", "Apr", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+        },
+        series: [
+            {
+                type: 'line',
+                data: [1, 3, 2, 4]
+            },
+            {
+                type: 'line',
+                data: [5, 3, 4, 2]
+            }
+        ]
+        };
+
+        // Export settings
         var exportSettings = {
         type: 'png',
         options: event
@@ -27,7 +42,6 @@ exports.handler = async (event) => {
             // Kill the pool when we're done with it
             exporter.killPool();
 
-            // If everything goes well return the image as base64 otherwise throw error
             if (res) {
                 resolve(res, 200);
             } else {
@@ -41,3 +55,4 @@ exports.handler = async (event) => {
     return promise;
 
 };
+

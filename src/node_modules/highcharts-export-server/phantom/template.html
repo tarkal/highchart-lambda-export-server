@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <script>
+    var highexp = {};
+
+    (function () {
+        var done = false;
+
+        highexp.done = function () {
+            done = true;
+        };
+
+        highexp.isDone = function () {
+            return done;
+        };
+    })();
+    </script>
+
+    {{additionalScripts}}
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{css}}
+
+    <style>
+        html, body {
+            margin: 0;
+        }
+    </style>
+
+    <script>
+        "{{highcharts}}";
+    </script>
+
+    {{js}}
+</head>
+
+<body>
+
+<!--
+    Want to hear a fun fact?
+
+    WebKit doesn't load external font sets unless it finds a reference to it
+    in the DOM.
+
+    Guess how long this took to debug?
+
+    Anyway, here is the fix:
+
+ -->
+<div style="font-family: 'Unica One';position:absolute;left:-999999px;">:(</div>
+<div style="font-family: 'Signika';position:absolute;left:-999999px;">:(</div>
+
+<div id="highcharts">
+    <div style="padding:5px;">
+        <h2>Export Server not configured!</h2>Please complete the configuration by running <code>node build.js</code>
+        in the export server root. <br/><br/>If you installed by running <code>npm install -g highcharts-export-server</code> and declined
+        the license agreement, you need to re-install to confirm.
+    </div>
+</div>
+
+</body>
+
+</html>
