@@ -75,6 +75,9 @@ A fairly significant proportion of the packages needed for this need to be compi
 // Launch the docker with amazon linux
 docker run -it --rm amazonlinux:2.0.20190508
 
+// Install wget
+yum install wget
+
 // Install nodejs
 curl --silent --location https://rpm.nodesource.com/setup_10.x | bash -
 yum -y install nodejs
@@ -86,22 +89,19 @@ cd /tmp
 yumdownloader fontconfig.x86_64 freetype.x86_64 expat.x86_64
 rpmdev-extract *.rpm
 
-// Install wget and download the ttf fonts
-yum install wget
-wget https://github.com/tarkal/highchart-lambda-export-server/raw/master/fonts.zip
-
-// Create the project and a folder called lib inside it
+// Create the project and folders called lib and fonts inside it
 mkdir -p /highchart_export_server/lib
+mkdir -p /highchart_export_server/fonts
 
 // Copy the installed dependencies to the lib folder
 cp /tmp/*/usr/lib64/* /highchart_export_server/lib
-cp /tmp/*/etc/fonts/fonts.conf /highchart_export_server/lib
 
-// Unzip the fonts into the lib
-unzip -j fonts.zip -d /highchart_export_server/lib
+// Download the ttf fonts and unzip the fonts into the fonts dir
+wget https://github.com/tarkal/highchart-lambda-export-server/raw/master/fonts.zip
+unzip -j fonts.zip -d /highchart_export_server/fonts/
 
-// Download the custom font.conf to replace the existing one
-wget https://raw.githubusercontent.com/tarkal/highchart-lambda-export-server/master/font.conf -P /highchart_export_server/lib
+// Download the updated fonts.conf file and place it in the libs
+wget https://github.com/tarkal/highchart-lambda-export-server/raw/master/fonts.conf -P /highchart_export_server/lib
 
 // Init the project and install highcharts-export-server
 cd /highchart_export_server
