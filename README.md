@@ -7,6 +7,11 @@ Deploying a highcharts export server on AWS Lambda turned out to be **WAY** more
 
 If you are in a hurry you you can just download and use the prebuilt zip straight out of the box as a lambda deployment. You will need a Lambda function running `Node.js 10.x`. 
 
+
+You will need to set the `FONTCONFIG_PATH` Lambda Environment variable to `/var/task/lib`.
+
+[![FONTCONFIG_PATH][1]][1]
+
 The function expects a JSON representation of the chart options.
 
 ```json
@@ -61,16 +66,12 @@ And it will return a Base64 encoded PNG of the chart in a `data` object.
 }
 ```
 
-You will also need to set the `FONTCONFIG_PATH` Lambda Environment variable to `/var/task/lib`.
-
-[![FONTCONFIG_PATH][1]][1]
-
 
 # Building from scratch:
 
 A fairly significant proportion of the packages needed for this need to be compiled specifically for the OS so the only way I found to achieve this universally was by using docker with an AWS image that matches the one used by Lambda.
 
-```
+```bash
 // Launch the docker with amazon linux
 docker run -it --rm amazonlinux:2.0.20190508
 
@@ -122,7 +123,7 @@ zip -y -r highcharts-export-server.zip .
 
 Now you need to copy the zip file from the docker container onto your host machine. Open a new terminal window and type the following:
 
-```
+```bash
 // Show all the docker containers
 docker ps
 
