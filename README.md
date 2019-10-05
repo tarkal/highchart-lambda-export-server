@@ -111,9 +111,8 @@ npm install highcharts-export-server
 npm init
 npm audit fix
 
-// Create an index.js with whatever tool you like. 
-// To see what to put in it see the section below
-vi index.js
+// Download the basic index.js
+wget https://raw.githubusercontent.com/tarkal/highchart-lambda-export-server/master/index.js
 
 // Zip everything up into a deployment package
 // The -y and -r options are needed to include all files and embed sim links
@@ -139,52 +138,7 @@ So at this point you end up with a zip file containing the following;
 
 This is the same package as provided in the above pre-build zip. You can now unpack that on any OS and edit the `index.js` file to suite your needs.
 
-The `index.js` file is a minimalist version that contains the following;
-
-```js
-// Include the exporter module
-const exporter = require('highcharts-export-server');
-
-exports.handler = async (event) => {
-
-    // Just for logging
-    console.log(event);
-
-    // The async request MUST be placed in a promise otherwise highcharts returns an undefined res
-    const promise = new Promise(function(resolve, reject) {
-
-        // Export settings passed in dynamically from the event
-        var exportSettings = {
-        type: 'png',
-        options: event
-        };
-
-        // Set up a pool of PhantomJS workers
-        exporter.initPool({maxWorkers: 2});
-
-        // Perform an export
-        exporter.export(exportSettings, function (err, res) {
-            
-            // Kill the pool when we're done with it
-            exporter.killPool();
-
-            // If everything goes well return the image as base64 otherwise throw error
-            if (res) {
-                resolve(res, 200);
-            } else {
-                reject(err);
-            }
-
-        });
-    })
-
-    // Return the results of the image
-    return promise;
-
-};
-```
-
-The most important parts to note are;
+The most important parts to note about the `index.js` are;
 
 1. You MUST run everything inside a `Promise`. Otherwise the highcharts server will return an `undefined` `res` in the export function and you will end up with an error every time.
 2. You need to include the `{maxWorkers: 2}` in the init. For some unknown reason it fails on lambda without it (likely a resource issue).
