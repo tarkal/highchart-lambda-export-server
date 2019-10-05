@@ -2,13 +2,14 @@
 
 This repo was created in response to [this](https://stackoverflow.com/questions/57097890/highcharts-export-server-on-aws-lamdba/57158024) question on stackoverflow.
 
+## In a hurry?
 
 Deploying a highcharts export server on AWS Lambda turned out to be **WAY** more difficult than anticipated due to the lack of available information and the large amount of trial and error. So hopefully this will help save you days of pain!
 
-If you are in a hurry you you can just download and use the prebuilt zip straight out of the box as a lambda deployment. You will need a Lambda function running `Node.js 10.x`. 
+If you are in a hurry you you can just download and use the prebuilt zip in the `dist` folder. It should work straight out of the box as a lambda deployment. You will need a Lambda function running `Node.js 10.x`. 
 
 
-You will need to set the `FONTCONFIG_PATH` Lambda Environment variable to `/var/task/lib`.
+Make sure you set the `FONTCONFIG_PATH` Lambda Environment variable to `/var/task/lib`.
 
 [![FONTCONFIG_PATH][1]][1]
 
@@ -122,7 +123,7 @@ And it will return a Base64 encoded PNG of the chart in a `data` object.
 ```
 
 
-# Building from scratch:
+## Building from scratch:
 
 A fairly significant proportion of the packages needed for this need to be compiled specifically for the OS so the only way I found to achieve this universally was by using docker with an AWS image that matches the one used by Lambda.
 
@@ -152,11 +153,11 @@ mkdir -p /highchart_export_server/fonts
 cp /tmp/*/usr/lib64/* /highchart_export_server/lib
 
 // Download the ttf fonts and unzip the fonts into the fonts dir
-wget https://github.com/tarkal/highchart-lambda-export-server/raw/master/fonts.zip
+wget https://github.com/tarkal/highchart-lambda-export-server/raw/master/resources/fonts.zip
 unzip -j fonts.zip -d /highchart_export_server/fonts/
 
 // Download the updated fonts.conf file and place it in the libs
-wget https://github.com/tarkal/highchart-lambda-export-server/raw/master/fonts.conf -P /highchart_export_server/lib
+wget https://raw.githubusercontent.com/tarkal/highchart-lambda-export-server/master/src/lib/fonts.conf -P /highchart_export_server/lib
 
 // Init the project and install highcharts-export-server
 cd /highchart_export_server
@@ -168,7 +169,7 @@ npm init
 npm audit fix
 
 // Download the basic index.js
-wget https://raw.githubusercontent.com/tarkal/highchart-lambda-export-server/master/index.js
+wget https://raw.githubusercontent.com/tarkal/highchart-lambda-export-server/master/src/index.js
 
 // Zip everything up into a deployment package
 // The -y and -r options are needed to include all files and embed sim links
@@ -199,9 +200,7 @@ So at this point you end up with a zip file containing the following;
 - package.json
 ```
 
-This is the same package as provided in the zip and project.
-
-The most important parts to note about the `index.js` are;
+This is the same package as provided in the zip and project. The important parts to note about the `index.js` that I discovered by trial and error are;
 
 1. You MUST run everything inside a `Promise`. Otherwise the highcharts server will return an `undefined` `res` in the export function and you will end up with an error every time.
 2. You need to include the `{maxWorkers: 2}` in the init. For some unknown reason it fails on lambda without it (likely a resource issue).
