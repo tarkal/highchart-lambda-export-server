@@ -3,6 +3,9 @@ const exporter = require('highcharts-export-server');
 
 exports.handler = async (event) => {
 
+    // Load the fonts
+    process.env.FONTCONFIG_PATH=''
+    
     // Just for logging
     console.log(event);
 
