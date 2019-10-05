@@ -85,12 +85,19 @@ cd /tmp
 yumdownloader fontconfig.x86_64 freetype.x86_64 expat.x86_64
 rpmdev-extract *.rpm
 
+// Install wget and download the ttf fonts
+yum install wget
+wget https://github.com/tarkal/highchart-lambda-export-server/raw/master/fonts.zip
+
 // Create the project and a folder called lib inside it
 mkdir -p /highchart_export_server/lib
 
 // Copy the installed dependencies to the lib folder
 cp /tmp/*/usr/lib64/* /highchart_export_server/lib
 cp /tmp/*/etc/fonts/fonts.conf /highchart_export_server/lib
+
+// Unzip the fonts into the lib
+unzip -j fonts.zip -d /highchart_export_server/lib
 
 // Init the project and install highcharts-export-server
 cd /highchart_export_server
