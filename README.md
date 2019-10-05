@@ -130,7 +130,7 @@ docker ps
 // This will show you some info including the container ID that you need
  
 // Copy the file to the host
-docker cp <container_id_returned_from_docker_ps>:/highchart_export_server/highcharts-export-server.zip /highcharts-export-server.zip
+docker cp <container_id_returned_from_docker_ps>:/highchart_export_server/highcharts-export-server.zip highcharts-export-server.zip
 ```
 
 So at this point you end up with a zip file containing the following;
