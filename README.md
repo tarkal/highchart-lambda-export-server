@@ -66,7 +66,7 @@ You will also need to set the `FONTCONFIG_PATH` Lambda Environment variable to `
 [![FONTCONFIG_PATH][1]][1]
 
 
-## For those interested in building this from scratch here are the basics:
+# Building from scratch:
 
 A fairly significant proportion of the packages needed for this need to be compiled specifically for the OS so the only way I found to achieve this universally was by using docker with an AWS image that matches the one used by Lambda.
 
@@ -98,6 +98,9 @@ cp /tmp/*/etc/fonts/fonts.conf /highchart_export_server/lib
 
 // Unzip the fonts into the lib
 unzip -j fonts.zip -d /highchart_export_server/lib
+
+// Download the custom font.conf to replace the existing one
+wget https://raw.githubusercontent.com/tarkal/highchart-lambda-export-server/master/font.conf -P /highchart_export_server/lib
 
 // Init the project and install highcharts-export-server
 cd /highchart_export_server
@@ -132,7 +135,7 @@ docker cp <container_id_returned_from_docker_ps>:/highchart_export_server/highch
 
 So at this point you end up with a zip file containing the following;
 
-[![enter image description here][2]][2]
+[![zip][2]][2]
 
 This is the same package as provided in the above pre-build zip. You can now unpack that on any OS and edit the `index.js` file to suite your needs.
 
