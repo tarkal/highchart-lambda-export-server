@@ -7,26 +7,6 @@ exports.handler = async (event) => {
 
     const promise = new Promise(function(resolve, reject) {
 
-        // Build the chart options
-        var chartOptions = {
-        title: {
-            text: 'My Chart'
-        },
-        xAxis: {
-            categories: ["Jan", "Feb", "Mar", "Apr", "Mar", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        },
-        series: [
-            {
-                type: 'line',
-                data: [1, 3, 2, 4]
-            },
-            {
-                type: 'line',
-                data: [5, 3, 4, 2]
-            }
-        ]
-        };
-
         // Export settings
         var exportSettings = {
         type: 'png',
