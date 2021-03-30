@@ -206,6 +206,94 @@ This is the same package as provided in the zip and project. The important parts
 2. You need to include the `{maxWorkers: 2}` in the init. For some unknown reason it fails on lambda without it (likely a resource issue).
 3. Lambda functions cannot return files directly. So if you are going to convert your chart to a PDF or SVG you will need to create some code to handle writing the file that is created by highcharts to a byte[] (or some other mechanism like S3) 
 
+
+## Run using API Gateway to Lambda:
+
+If you plan to use API Gateway, the options will need to be passed in through the body of the request. The dist folder includes a version that creates the exportSettings from the body of the request, so you will need to pass along the options in the JSON object.
+
+Example request:
+```
+{
+"b64":true, 
+"options":{
+  "chart": {
+    "style": {
+      "fontFamily": "Arial"
+    },
+    "type": "bar"
+  },
+  "title": {
+    "text": "Historic World Population by Region"
+  },
+  "subtitle": {
+    "text": "Source: Wikipedia.org"
+  },
+
+    ...
+
+}
+```
+
+If you need to alter the index file, follow the following steps. This is similar to the the manual building process in that it uses docker.
+
+
+```bash
+// Launch the docker with amazon linux
+docker run -it --rm amazonlinux:2.0.20190508
+
+// Install wget
+yum install wget
+
+
+yum install -y bzip2 tar
+cd /tmp
+
+
+// Download the dist
+wget https://raw.githubusercontent.com/tarkal/highchart-lambda-export-server/master/dist/highcharts-export-server.zip
+
+
+//unzip folder if you need to make changes to the index file
+unzip  highcharts-export-server.zip
+
+
+//move up zip file
+mv highcharts-export-server.zip ../
+
+// edit index.js
+vi index.js
+
+// change index file as needed
+// ise i to enter INSERT mode and Esc to exit INSERT mode
+// if you are using API gateway cance event to event.body 
+// you may also need to parse the body if it is a string using JSON.parse(event.body)
+// use :wq to save and exit vi
+
+// Zip everything up into a deployment package
+// The -y and -r options are needed to include all files and embed sim links
+// You must not include the parent directory
+zip -y -r highcharts-export-server.zip .
+
+
+// change permissions to zip file
+chmod 775 highcharts-export-server.zip
+
+```
+
+Then follow the same process to copy the zip file to your host machine.
+
+```bash
+// Show all the docker containers
+docker ps
+
+// This will show you some info including the container ID that you need
+ 
+// Copy the file to the host
+docker cp <container_id_returned_from_docker_ps>:/highchart_export_server/highcharts-export-server.zip highcharts-export-server.zip
+```
+
+
+
 I hope this helps.
 
 > **JS Experts** If someone wants to submit some code for a better `index.js` feel free. 
