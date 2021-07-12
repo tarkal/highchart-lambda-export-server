@@ -6,7 +6,7 @@ This repo was created in response to [this](https://stackoverflow.com/questions/
 
 Deploying a highcharts export server on AWS Lambda turned out to be **WAY** more difficult than anticipated due to the lack of available information and the large amount of trial and error. So hopefully this will help save you days of pain!
 
-If you are in a hurry you you can just download and use the prebuilt zip in the `dist` folder. It should work straight out of the box as a lambda deployment. You will need a Lambda function running `Node.js 10.x`. 
+If you are in a hurry you you can just download and use the prebuilt zip in the `dist` folder. It should work straight out of the box as a lambda deployment. You will need a Lambda function running `Node.js 10.x`.  As chart generation is resource intensive, for best performance you should use at least 4096MB of RAM.  Anything less than this can lead to timeouts.  Higher values may improve performance further.
 
 
 Make sure you set the `FONTCONFIG_PATH` Lambda Environment variable to `/var/task/lib`.
